@@ -49,7 +49,7 @@ def allowed_file(filename):
 def send_application_email(applicant_data, attachments=None):
     """Send emails to applicant and company"""
     try:
-        # Applicant confirmation email
+        # Applicant confirmation email (NO ATTACHMENTS)
         applicant_msg = Message(
             subject=f"Application Received: {applicant_data['position']}",
             recipients=[applicant_data['email']],
@@ -71,10 +71,10 @@ Monyamane Tech Solutions Hiring Team
 """
         )
         
-        # Company notification email
+        # Company notification email (WITH ATTACHMENTS)
         company_msg = Message(
             subject=f"New Job Application: {applicant_data['position']}",
-            recipients=['info@monyatech.org.za'],
+            recipients=['support@monyatech.org.za'],  # Changed to support email as requested
             body=f"""New Job Application Received:
 
 Applicant Information:
@@ -96,26 +96,45 @@ Files attached:
 """
         )
         
-        # Attach files if they exist
+        # Attach files ONLY to company email
         if attachments and 'resume' in attachments:
-            with open(attachments['resume'], 'rb') as f:
-                company_msg.attach(
-                    filename=f"resume_{applicant_data['firstName']}_{applicant_data['lastName']}.{attachments['resume'].split('.')[-1]}",
-                    content_type="application/octet-stream",
-                    data=f.read()
-                )
+            try:
+                with open(attachments['resume'], 'rb') as f:
+                    company_msg.attach(
+                        filename=f"resume_{applicant_data['firstName']}_{applicant_data['lastName']}.{attachments['resume'].split('.')[-1]}",
+                        content_type="application/octet-stream",
+                        data=f.read()
+                    )
+            except Exception as e:
+                print(f"Error attaching resume: {str(e)}")
         
         if attachments and 'portfolio' in attachments:
-            with open(attachments['portfolio'], 'rb') as f:
-                company_msg.attach(
-                    filename=f"portfolio_{applicant_data['firstName']}_{applicant_data['lastName']}.{attachments['portfolio'].split('.')[-1]}",
-                    content_type="application/octet-stream",
-                    data=f.read()
-                )
+            try:
+                with open(attachments['portfolio'], 'rb') as f:
+                    company_msg.attach(
+                        filename=f"portfolio_{applicant_data['firstName']}_{applicant_data['lastName']}.{attachments['portfolio'].split('.')[-1]}",
+                        content_type="application/octet-stream",
+                        data=f.read()
+                    )
+            except Exception as e:
+                print(f"Error attaching portfolio: {str(e)}")
         
-        # Send emails
-        mail.send(applicant_msg)
-        mail.send(company_msg)
+        # Send emails separately
+        try:
+            # Send to applicant first (no attachments)
+            mail.send(applicant_msg)
+            print(f"Applicant email sent to: {applicant_data['email']}")
+        except Exception as e:
+            print(f"Error sending applicant email: {str(e)}")
+            # Still try to send company email even if applicant email fails
+        
+        try:
+            # Send to company with attachments
+            mail.send(company_msg)
+            print(f"Company email sent to: support@monyatech.org.za")
+        except Exception as e:
+            print(f"Error sending company email: {str(e)}")
+            return False
         
         return True
         
