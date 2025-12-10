@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section bg-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Innovative IT Solutions for Your Business</h1>
+                <p class="lead mb-4">We help businesses leverage technology to achieve their goals with custom software, cloud solutions, cybersecurity services, IoT Solutions, AI Solutions, and Mobile App Solutions.</p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="{{ url_for('contact') }}" class="btn btn-light btn-lg px-4">Get Started</a>
+                    <a href="{{ url_for('all_services') }}" class="btn btn-outline-light btn-lg px-4">Our Services</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="{{ url_for('static', filename='images/hero-image.png') }}" alt="Monyamane Tech Solutions" class="img-fluid rounded shadow">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Preview -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Monyamane Tech Solutions IT Services</h2>
+            <p class="text-muted">Comprehensive solutions tailored to your needs</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for service in services %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm service-card">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-lg bg-light-primary rounded-circle mb-4 mx-auto">
+                            <i class="{{ service.icon }} text-primary fs-3"></i>
+                        </div>
+                        <h5 class="card-title">{{ service.title }}</h5>
+                        <p class="card-text text-muted">{{ service.description }}</p>
+                        <a href="{{ url_for('service_detail', service_id=service.id) }}" class="btn btn-link text-primary text-decoration-none">
+                            Learn More <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-5">
+            <a href="{{ url_for('all_services') }}" class="btn btn-primary px-4">View All Services</a>
+        </div>
+    </div>
+</section>
+
+<!-- About Company -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <img src="{{ url_for('static', filename='images/about-preview.jpg') }}" alt="About Monyamane Tech Solutions" class="img-fluid rounded shadow">
+            </div>
+            <div class="col-lg-6">
+                <h2 class="fw-bold mb-4">Trusted IT Partner Since 2024</h2>
+                <p class="lead text-muted mb-4">We've been helping businesses navigate the complex world of technology with innovative solutions.</p>
+                <p>Our team of certified professionals brings expertise in software development, cloud computing, and cybersecurity to deliver solutions that drive business growth.</p>
+                <ul class="list-unstyled mb-4">
+                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> 20+ Successful Projects</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> 98% Client Retention Rate</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Certified Professionals</li>
+                </ul>
+                <a href="{{ url_for('about') }}" class="btn btn-outline-primary px-4">Learn More About Us</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Portfolio Preview -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Our Work</h2>
+            <p class="text-muted">See how we've helped businesses like yours achieve digital transformation</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for item in portfolio_items %}
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 portfolio-item">
+                    <img src="{{ url_for('static', filename='images/portfolio/' + item.image) }}" class="card-img-top" alt="{{ item.title }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.title }}</h5>
+                        <p class="card-text text-muted">{{ item.client }}</p>
+                        <p class="card-text">{{ item.description[:100] }}...</p>
+                        <div class="mb-3">
+                            {% for tech in item.technologies[:3] %}
+                            <span class="badge bg-primary me-1 mb-1">{{ tech }}</span>
+                            {% endfor %}
+                        </div>
+                        <a href="{{ url_for('portfolio_detail', item_id=item.id) }}" class="btn btn-link text-primary text-decoration-none p-0">
+                            View Case Study <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-5">
+            <a href="{{ url_for('portfolio') }}" class="btn btn-primary px-4">View Full Portfolio</a>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">What Our Clients Say</h2>
+            <p class="text-muted">Trusted by businesses across various industries</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex mb-4">
+                            <img src="{{ url_for('static', filename='images/clients/client1.jpg') }}" alt="Client" class="rounded-circle me-3" width="60" height="60">
+                            <div>
+                                <h5 class="mb-1">FHS</h5>
+                                <p class="text-muted mb-0">Filter & Hose Solutions</p>
+                            </div>
+                        </div>
+                        <p class="card-text">"Monyamane Tech Solutions transformed our business by digitizing our operations. Their team's expertise and dedication were exceptional."</p>
+                        <div class="mt-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex mb-4">
+                            <img src="{{ url_for('static', filename='images/clients/client2.jpg') }}" alt="Client" class="rounded-circle me-3" width="60" height="60">
+                            <div>
+                                <h5 class="mb-1">Oscar Properties</h5>
+                                <p class="text-muted mb-0">Estate Agency</p>
+                            </div>
+                        </div>
+                        <p class="card-text">"The cybersecurity solution implemented by Monyamane Tech Solutions protected our sensitive client data and helped us achieve compliance."</p>
+                        <div class="mt-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex mb-4">
+                            <img src="{{ url_for('static', filename='images/clients/client3.jpg') }}" alt="Client" class="rounded-circle me-3" width="60" height="60">
+                            <div>
+                                <h5 class="mb-1">The Rental Team</h5>
+                                <p class="text-muted mb-0">Property Management</p>
+                            </div>
+                        </div>
+                        <p class="card-text">"The mobile app solution helped us perform room inspections efficiently, maintaining good relationships between tenants and landlords."</p>
+                        <div class="mt-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="fw-bold mb-4">Ready to Transform Your Business?</h2>
+        <p class="lead mb-5">Let's discuss how we can help you achieve your technology goals.</p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="{{ url_for('contact') }}" class="btn btn-light btn-lg px-4">Get in Touch</a>
+            <a href="tel:+27634291035" class="btn btn-outline-light btn-lg px-4">
+                <i class="fas fa-phone me-2"></i> Call Us
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

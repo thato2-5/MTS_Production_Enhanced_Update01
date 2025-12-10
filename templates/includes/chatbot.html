@@ -1,0 +1,38 @@
+<!-- Chatbot Container -->
+<div class="chatbot-container position-fixed bottom-0 end-0 mb-4 me-4" style="z-index: 1000;">
+    <!-- Chatbot Toggle Button -->
+    <button class="btn btn-primary btn-lg rounded-circle p-3 chatbot-toggle" id="chatbotToggle" style="z-index: 999;">
+        <i class="fas fa-comment-dots fs-4"></i>
+    </button>
+
+    <!-- Chatbot Window -->
+    <div class="chatbot-window" id="chatbotWindow" style="display: none;">
+        <div class="chatbot-header d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <div class="icon-sm bg-light rounded-circle me-3">
+                    <i class="fas fa-robot text-primary"></i>
+                </div>
+                <div>
+                    <h6 class="mb-0">Monyamane Tech Assistant</h6>
+                    <small class="text-light">Online</small>
+                </div>
+            </div>
+            <button class="btn btn-sm btn-light chatbot-close" id="chatbotClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="chatbot-messages" id="chatbotMessages">
+            <!-- Messages will be inserted here by JavaScript -->
+        </div>
+
+        <div class="chatbot-input">
+            <div class="input-group">
+                <input type="text" class="form-control" id="chatbotInput" placeholder="Type your message...">
+                <button class="btn btn-primary" type="button" id="chatbotSend">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

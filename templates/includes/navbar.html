@@ -1,0 +1,52 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="{{ url_for('home') }}">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Monyamane Tech Solutions" height="40" class="me-2">
+            <span class="fw-bold">Monyamane Tech Solutions</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('about') }}">About</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Services
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+                        {% if services %}
+                            {% for service in services %}
+                            <li><a class="dropdown-item" href="{{ url_for('service_detail', service_id=service.id) }}">{{ service.title }}</a></li>
+                            {% endfor %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('all_services') }}">All Services</a></li>
+                        {% else %}
+                            <li><a class="dropdown-item" href="{{ url_for('all_services') }}">View Services</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('portfolio') }}">Portfolio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('blog') }}">Blog</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('contact') }}">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('careers') }}">Careers</a>
+                </li>
+                <li class="nav-item ms-lg-3">
+                    <a class="btn btn-outline-light" href="{{ url_for('client_portal') }}">Client Portal</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

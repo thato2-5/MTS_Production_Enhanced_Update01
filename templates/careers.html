@@ -1,0 +1,849 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Application Form Modal -->
+<div class="modal fade" id="applicationModal" tabindex="-1" aria-labelledby="applicationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="applicationModalLabel">Apply for <span id="jobTitle"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="applicationForm" method="POST" action="{{ url_for('submit_application') }}" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <!-- Hidden field for job title -->
+                    <input type="hidden" id="position" name="position">
+                    
+                    <!-- Success/Error Messages -->
+                    <div id="formMessages" class="d-none"></div>
+                    
+                    <!-- Personal Information -->
+                    <div class="mb-4">
+                        <h6 class="mb-3">Personal Information</h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="firstName" class="form-label">First Name *</label>
+                                <input type="text" class="form-control" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="lastName" class="form-label">Last Name *</label>
+                                <input type="text" class="form-control" id="lastName" name="lastName" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Email Address *</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="phone" class="form-label">Phone Number *</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="linkedin" class="form-label">LinkedIn Profile (Optional)</label>
+                                <input type="url" class="form-control" id="linkedin" name="linkedin" placeholder="https://linkedin.com/in/yourprofile">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cover Letter -->
+                    <div class="mb-4">
+                        <h6 class="mb-3">Cover Letter</h6>
+                        <div class="form-group">
+                            <label for="coverLetter" class="form-label">Why are you interested in this position? *</label>
+                            <textarea class="form-control" id="coverLetter" name="coverLetter" rows="4" required 
+                                      placeholder="Tell us about your interest in this role and why you'd be a great fit..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Uploads -->
+                    <div class="mb-4">
+                        <h6 class="mb-3">Documents</h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="resume" class="form-label">Resume/CV (PDF or DOCX) *</label>
+                                <input type="file" class="form-control" id="resume" name="resume" accept=".pdf,.doc,.docx" required>
+                                <small class="text-muted">Max file size: 5MB</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="portfolio" class="form-label">Portfolio/Work Samples (Optional)</label>
+                                <input type="file" class="form-control" id="portfolio" name="portfolio" accept=".pdf,.doc,.docx,.zip">
+                                <small class="text-muted">PDF, DOCX, or ZIP (max 10MB)</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Additional Information -->
+                    <div class="mb-4">
+                        <h6 class="mb-3">Additional Information</h6>
+                        <div class="form-group">
+                            <label for="source" class="form-label">How did you hear about this position? *</label>
+                            <select class="form-select" id="source" name="source" required>
+                                <option value="" selected disabled>Select an option</option>
+                                <option value="LinkedIn">LinkedIn</option>
+                                <option value="Indeed">Indeed</option>
+                                <option value="Company Website">Company Website</option>
+                                <option value="Referral">Referral</option>
+                                <option value="University Career Center">University Career Center</option>
+                                <option value="Job Fair">Job Fair</option>
+                                <option value="Social Media">Social Media</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="availability" class="form-label">When can you start? *</label>
+                            <input type="text" class="form-control" id="availability" name="availability" required 
+                                   placeholder="e.g., Immediately, 2 weeks notice, June 2024">
+                        </div>
+                    </div>
+                    
+                    <!-- Consent -->
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="consent" name="consent" required>
+                        <label class="form-check-label" for="consent">
+                            I consent to Monyamane Tech Solutions processing my personal data for recruitment purposes. *
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                        Submit Application
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Careers Hero -->
+<section class="hero-section bg-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Join Our Team</h1>
+                <p class="lead mb-4">Build your career with a company that values innovation, collaboration, and growth.</p>
+                <div class="d-flex gap-3">
+                    <a href="#open-positions" class="btn btn-light btn-lg px-4">View Openings</a>
+                    <a href="#why-join-us" class="btn btn-outline-light btn-lg px-4">Why Join Us?</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="{{ url_for('static', filename='images/careers-hero.png') }}" alt="Join Our Team" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Join Us -->
+<section class="py-5" id="why-join-us">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Why Work at Monyamane Tech Solutions?</h2>
+            <p class="text-muted">We're more than just a workplace</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-lg bg-light-primary rounded-circle mb-4 mx-auto">
+                            <i class="fas fa-lightbulb text-primary fs-3"></i>
+                        </div>
+                        <h5 class="card-title">Innovative Projects</h5>
+                        <p class="card-text text-muted">Work on cutting-edge technologies and challenging projects that make an impact.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-lg bg-light-primary rounded-circle mb-4 mx-auto">
+                            <i class="fas fa-chart-line text-primary fs-3"></i>
+                        </div>
+                        <h5 class="card-title">Career Growth</h5>
+                        <p class="card-text text-muted">Continuous learning opportunities and clear paths for advancement.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-lg bg-light-primary rounded-circle mb-4 mx-auto">
+                            <i class="fas fa-heart text-primary fs-3"></i>
+                        </div>
+                        <h5 class="card-title">Great Benefits</h5>
+                        <p class="card-text text-muted">Competitive compensation, health insurance, and retirement plans.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-lg bg-light-primary rounded-circle mb-4 mx-auto">
+                            <i class="fas fa-users text-primary fs-3"></i>
+                        </div>
+                        <h5 class="card-title">Awesome Culture</h5>
+                        <p class="card-text text-muted">Collaborative environment with regular team events and activities.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Employee Testimonials -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Hear From Our Team</h2>
+            <p class="text-muted">What our employees say about working here</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex mb-4">
+                            <img src="{{ url_for('static', filename='images/team/employee1.jpg') }}" alt="Employee" class="rounded-circle me-3" width="60" height="60">
+                            <div>
+                                <h5 class="mb-1">Sanele</h5>
+                                <p class="text-muted mb-0">Senior Software Engineer</p>
+                            </div>
+                        </div>
+                        <p class="card-text">"I've grown more in my 6 months at Monyamane Tech Solutions than I did in 2 years at my previous company. The learning opportunities and challenging projects keep me engaged every day."</p>
+                        <div class="mt-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex mb-4">
+                            <img src="{{ url_for('static', filename='images/team/employee2.jpg') }}" alt="Employee" class="rounded-circle me-3" width="60" height="60">
+                            <div>
+                                <h5 class="mb-1">Zeenhle</h5>
+                                <p class="text-muted mb-0">Cloud Architect</p>
+                            </div>
+                        </div>
+                        <p class="card-text">"The work-life balance at Monyamane Tech Solutions is exceptional. Management truly cares about employee wellbeing while still delivering high-quality solutions to clients."</p>
+                        <div class="mt-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex mb-4">
+                            <img src="{{ url_for('static', filename='images/team/employee3.jpg') }}" alt="Employee" class="rounded-circle me-3" width="60" height="60">
+                            <div>
+                                <h5 class="mb-1">Moloko</h5>
+                                <p class="text-muted mb-0">Cybersecurity Analyst</p>
+                            </div>
+                        </div>
+                        <p class="card-text">"The collaborative culture here is amazing. Everyone is willing to help, share knowledge, and work together to solve complex problems."</p>
+                        <div class="mt-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Benefits -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h2 class="fw-bold mb-4">Our Benefits & Perks</h2>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="d-flex">
+                            <div class="me-3 text-primary">
+                                <i class="fas fa-check-circle fs-4"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Health Insurance</h5>
+                                <p class="text-muted mb-0">Comprehensive medical, dental, and vision plans</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex">
+                            <div class="me-3 text-primary">
+                                <i class="fas fa-check-circle fs-4"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Flexible Work</h5>
+                                <p class="text-muted mb-0">Remote and hybrid work options</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex">
+                            <div class="me-3 text-primary">
+                                <i class="fas fa-check-circle fs-4"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Learning Budget</h5>
+                                <p class="text-muted mb-0">Annual stipend for courses and certifications</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex">
+                            <div class="me-3 text-primary">
+                                <i class="fas fa-check-circle fs-4"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Retirement Plans</h5>
+                                <p class="text-muted mb-0">401(k) with company matching</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex">
+                            <div class="me-3 text-primary">
+                                <i class="fas fa-check-circle fs-4"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Generous PTO</h5>
+                                <p class="text-muted mb-0">Paid time off and holidays</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex">
+                            <div class="me-3 text-primary">
+                                <i class="fas fa-check-circle fs-4"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Wellness Program</h5>
+                                <p class="text-muted mb-0">Gym reimbursement and wellness activities</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <img src="{{ url_for('static', filename='images/office-culture.jpg') }}" alt="Office Culture" class="card-img-top">
+                    <div class="card-body text-center p-4">
+                        <h5 class="card-title">Life at Monyamane Tech Solutions</h5>
+                        <p class="card-text text-muted">We believe work should be engaging, rewarding, and fun. From team lunches to hackathons, we foster a culture of collaboration and innovation.</p>
+                        <a href="#" class="btn btn-outline-primary">View Gallery</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Open Positions -->
+<section class="py-5 bg-light" id="open-positions">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Open Positions</h2>
+            <p class="text-muted">Join our growing team</p>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="jobsAccordion">
+                    <!-- Software Engineer Intern -->
+                    <div class="accordion-item border-0 shadow-sm mb-3">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                <div>
+                                    <h5 class="mb-1">Software Engineer Intern</h5>
+                                    <div class="d-flex flex-wrap gap-3">
+                                        <small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i> Remote</small>
+                                        <small class="text-muted"><i class="fas fa-briefcase me-1"></i> Part-time</small>
+                                        <small class="text-muted"><i class="fas fa-dollar-sign me-1"></i> Negotiable</small>
+                                    </div>
+                                </div>
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#jobsAccordion">
+                            <div class="accordion-body">
+                                <h6>Job Description</h6>
+                                <p>We're looking for an intern to join our product development team. You'll be responsible for designing and implementing scalable software solutions.</p>
+                                
+                                <h6 class="mt-4">Responsibilities</h6>
+                                <ul>
+                                    <li>Design and develop high-quality software solutions</li>
+                                    <li>Collaborate with cross-functional teams to define requirements</li>
+                                    <li>Conduct code reviews</li>
+                                    <li>Optimize applications for maximum performance and scalability</li>
+                                    <li>Stay updated with emerging technologies and best practices</li>
+                                </ul>
+                                
+                                <h6 class="mt-4">Requirements</h6>
+                                <ul>
+                                    <li>Expertise in Python, Java, or JavaScript</li>
+                                    <li>Experience with cloud platforms (AWS, Azure, or GCP)</li>
+                                    <li>Strong understanding of software architecture and design patterns</li>
+                                    <li>Excellent problem-solving and communication skills</li>
+                                </ul>
+                                
+                                <div class="mt-4">
+                                    <button type="button" class="btn btn-primary apply-btn" data-position="Software Engineer Intern">Apply Now</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cloud Solutions Architect Intern -->
+                    <div class="accordion-item border-0 shadow-sm mb-3">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                <div>
+                                    <h5 class="mb-1">Cloud Solutions Architect Intern</h5>
+                                    <div class="d-flex flex-wrap gap-3">
+                                        <small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i> Remote</small>
+                                        <small class="text-muted"><i class="fas fa-briefcase me-1"></i> Part-time</small>
+                                        <small class="text-muted"><i class="fas fa-dollar-sign me-1"></i> Negotiable</small>
+                                    </div>
+                                </div>
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#jobsAccordion">
+                            <div class="accordion-body">
+                                <h6>Job Description</h6>
+                                <p>Join our cloud team to design and implement scalable cloud solutions for our clients. You'll work with cutting-edge technologies and gain hands-on experience with enterprise cloud architectures.</p>
+                                
+                                <h6 class="mt-4">Responsibilities</h6>
+                                <ul>
+                                    <li>Design cloud-native solutions for client applications</li>
+                                    <li>Assist in migrating on-premise applications to cloud platforms</li>
+                                    <li>Implement security best practices for cloud environments</li>
+                                    <li>Optimize cloud infrastructure for cost and performance</li>
+                                    <li>Document architecture designs and deployment processes</li>
+                                </ul>
+                                
+                                <h6 class="mt-4">Requirements</h6>
+                                <ul>
+                                    <li>Understanding of cloud computing concepts and services</li>
+                                    <li>Familiarity with AWS, Azure, or Google Cloud Platform</li>
+                                    <li>Basic knowledge of networking and security principles</li>
+                                    <li>Experience with infrastructure as code (Terraform, CloudFormation)</li>
+                                    <li>Strong analytical and problem-solving skills</li>
+                                </ul>
+                                
+                                <div class="mt-4">
+                                    <button type="button" class="btn btn-primary apply-btn" data-position="Cloud Solutions Architect Intern">Apply Now</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cybersecurity Analyst Intern -->
+                    <div class="accordion-item border-0 shadow-sm mb-3">
+                        <h2 class="accordion-header" id="headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                <div>
+                                    <h5 class="mb-1">Cybersecurity Analyst Intern</h5>
+                                    <div class="d-flex flex-wrap gap-3">
+                                        <small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i> Remote</small>
+                                        <small class="text-muted"><i class="fas fa-briefcase me-1"></i> Part-time</small>
+                                        <small class="text-muted"><i class="fas fa-dollar-sign me-1"></i> Negotiable</small>
+                                    </div>
+                                </div>
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#jobsAccordion">
+                            <div class="accordion-body">
+                                <h6>Job Description</h6>
+                                <p>Protect our digital assets and help build secure systems. You'll work with our security team to monitor, analyze, and respond to security threats in real-time.</p>
+                                
+                                <h6 class="mt-4">Responsibilities</h6>
+                                <ul>
+                                    <li>Monitor security alerts and incidents</li>
+                                    <li>Assist in vulnerability assessments and penetration testing</li>
+                                    <li>Analyze security logs and investigate anomalies</li>
+                                    <li>Help implement security controls and policies</li>
+                                    <li>Participate in security awareness training development</li>
+                                </ul>
+                                
+                                <h6 class="mt-4">Requirements</h6>
+                                <ul>
+                                    <li>Understanding of cybersecurity fundamentals</li>
+                                    <li>Familiarity with network protocols and security tools</li>
+                                    <li>Basic knowledge of operating system security</li>
+                                    <li>Interest in threat intelligence and security operations</li>
+                                    <li>Strong attention to detail and analytical mindset</li>
+                                </ul>
+                                
+                                <div class="mt-4">
+                                    <button type="button" class="btn btn-primary apply-btn" data-position="Cybersecurity Analyst Intern">Apply Now</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- React-Native Intern -->
+                    <div class="accordion-item border-0 shadow-sm mb-3">
+                        <h2 class="accordion-header" id="headingFour">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                <div>
+                                    <h5 class="mb-1">React-Native Intern</h5>
+                                    <div class="d-flex flex-wrap gap-3">
+                                        <small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i> Remote</small>
+                                        <small class="text-muted"><i class="fas fa-briefcase me-1"></i> Part-time</small>
+                                        <small class="text-muted"><i class="fas fa-dollar-sign me-1"></i> Negotiable</small>
+                                    </div>
+                                </div>
+                            </button>
+                        </h2>
+                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#jobsAccordion">
+                            <div class="accordion-body">
+                                <h6>Job Description</h6>
+                                <p>Join our mobile development team to create cross-platform mobile applications using React Native. You'll work on real projects that reach thousands of users.</p>
+                                
+                                <h6 class="mt-4">Responsibilities</h6>
+                                <ul>
+                                    <li>Develop and maintain mobile applications using React Native</li>
+                                    <li>Collaborate with designers to implement user interfaces</li>
+                                    <li>Write clean, maintainable, and testable code</li>
+                                    <li>Optimize app performance for iOS and Android platforms</li>
+                                    <li>Participate in code reviews and team meetings</li>
+                                </ul>
+                                
+                                <h6 class="mt-4">Requirements</h6>
+                                <ul>
+                                    <li>Basic understanding of React and JavaScript/TypeScript</li>
+                                    <li>Familiarity with mobile development concepts</li>
+                                    <li>Interest in UI/UX design principles</li>
+                                    <li>Knowledge of REST APIs and mobile app architecture</li>
+                                    <li>Creative problem-solving skills</li>
+                                </ul>
+                                
+                                <div class="mt-4">
+                                    <button type="button" class="btn btn-primary apply-btn" data-position="React-Native Intern">Apply Now</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- IoT Developer Intern -->
+                    <div class="accordion-item border-0 shadow-sm mb-3">
+                        <h2 class="accordion-header" id="headingFive">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                <div>
+                                    <h5 class="mb-1">IoT Developer Intern</h5>
+                                    <div class="d-flex flex-wrap gap-3">
+                                        <small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i> Remote</small>
+                                        <small class="text-muted"><i class="fas fa-briefcase me-1"></i> Part-time</small>
+                                        <small class="text-muted"><i class="fas fa-dollar-sign me-1"></i> Negotiable</small>
+                                    </div>
+                                </div>
+                            </button>
+                        </h2>
+                        <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#jobsAccordion">
+                            <div class="accordion-body">
+                                <h6>Job Description</h6>
+                                <p>Work on the cutting edge of technology by developing Internet of Things solutions. You'll help create connected devices and systems that solve real-world problems.</p>
+                                
+                                <h6 class="mt-4">Responsibilities</h6>
+                                <ul>
+                                    <li>Develop firmware for IoT devices and sensors</li>
+                                    <li>Assist in designing IoT system architectures</li>
+                                    <li>Implement communication protocols (MQTT, HTTP, Bluetooth)</li>
+                                    <li>Test and debug IoT solutions in lab environments</li>
+                                    <li>Document development processes and system designs</li>
+                                </ul>
+                                
+                                <h6 class="mt-4">Requirements</h6>
+                                <ul>
+                                    <li>Basic knowledge of embedded systems programming</li>
+                                    <li>Familiarity with C/C++ or Python</li>
+                                    <li>Understanding of networking concepts</li>
+                                    <li>Interest in hardware and sensor technologies</li>
+                                    <li>Curiosity about emerging IoT trends</li>
+                                </ul>
+                                
+                                <div class="mt-4">
+                                    <button type="button" class="btn btn-primary apply-btn" data-position="IoT Developer Intern">Apply Now</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Python Developer Intern -->
+                    <div class="accordion-item border-0 shadow-sm">
+                        <h2 class="accordion-header" id="headingSix">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                                <div>
+                                    <h5 class="mb-1">Python Developer Intern</h5>
+                                    <div class="d-flex flex-wrap gap-3">
+                                        <small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i> Remote</small>
+                                        <small class="text-muted"><i class="fas fa-briefcase me-1"></i> Part-time</small>
+                                        <small class="text-muted"><i class="fas fa-dollar-sign me-1"></i> Negotiable</small>
+                                    </div>
+                                </div>
+                            </button>
+                        </h2>
+                        <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#jobsAccordion">
+                            <div class="accordion-body">
+                                <h6>Job Description</h6>
+                                <p>Join our backend development team to build scalable Python applications and APIs. You'll work with modern frameworks and contribute to projects that power our core services.</p>
+                                
+                                <h6 class="mt-4">Responsibilities</h6>
+                                <ul>
+                                    <li>Develop and maintain Python applications and APIs</li>
+                                    <li>Write efficient, reusable, and testable code</li>
+                                    <li>Integrate data storage solutions (databases, cache systems)</li>
+                                    <li>Implement security and data protection measures</li>
+                                    <li>Collaborate with frontend developers on integration</li>
+                                </ul>
+                                
+                                <h6 class="mt-4">Requirements</h6>
+                                <ul>
+                                    <li>Proficiency in Python programming</li>
+                                    <li>Familiarity with Python frameworks (Django, Flask, FastAPI)</li>
+                                    <li>Basic knowledge of databases (SQL and NoSQL)</li>
+                                    <li>Understanding of REST API design principles</li>
+                                    <li>Experience with version control (Git)</li>
+                                </ul>
+                                
+                                <div class="mt-4">
+                                    <button type="button" class="btn btn-primary apply-btn" data-position="Python Developer Intern">Apply Now</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <div class="text-center mt-5">
+                    <p class="text-muted">Don't see your dream job? We're always looking for talented individuals.</p>
+                    <a href="{{ url_for('contact') }}" class="btn btn-outline-primary">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Hiring Process -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Our Hiring Process</h2>
+            <p class="text-muted">What to expect when you apply</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-lg bg-light-primary rounded-circle mb-4 mx-auto">
+                            <span class="text-primary fs-3 fw-bold">1</span>
+                        </div>
+                        <h5 class="card-title">Application Review</h5>
+                        <p class="card-text text-muted">Our team reviews your application and portfolio to assess fit.</p>
+                        <p class="text-muted"><small>1-3 business days</small></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-lg bg-light-primary rounded-circle mb-4 mx-auto">
+                            <span class="text-primary fs-3 fw-bold">2</span>
+                        </div>
+                        <h5 class="card-title">Initial Interview</h5>
+                        <p class="card-text text-muted">A 30-minute video call with our hiring team.</p>
+                        <p class="text-muted"><small>1 week after application</small></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-lg bg-light-primary rounded-circle mb-4 mx-auto">
+                            <span class="text-primary fs-3 fw-bold">3</span>
+                        </div>
+                        <h5 class="card-title">Technical Assessment</h5>
+                        <p class="card-text text-muted">A practical test relevant to the position.</p>
+                        <p class="text-muted"><small>1-2 weeks after initial interview</small></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-lg bg-light-primary rounded-circle mb-4 mx-auto">
+                            <span class="text-primary fs-3 fw-bold">4</span>
+                        </div>
+                        <h5 class="card-title">Team Interviews</h5>
+                        <p class="card-text text-muted">Meetings with potential team members and managers.</p>
+                        <p class="text-muted"><small>1 week after assessment</small></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-lg bg-light-primary rounded-circle mb-4 mx-auto">
+                            <span class="text-primary fs-3 fw-bold">5</span>
+                        </div>
+                        <h5 class="card-title">Offer & Onboarding</h5>
+                        <p class="card-text text-muted">Welcome to the team! We'll help you get started.</p>
+                        <p class="text-muted"><small>1-2 weeks after final interviews</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="fw-bold mb-4">Ready to Join Our Team?</h2>
+        <p class="lead mb-5">Take the first step toward an exciting career at Monyamane Tech Solutions.</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="#open-positions" class="btn btn-light btn-lg px-4">View Open Positions</a>
+            <a href="{{ url_for('contact') }}" class="btn btn-outline-light btn-lg px-4">Contact Recruiting</a>
+        </div>
+    </div>
+</section>
+
+<!-- JavaScript for Application Functionality -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const applicationModal = new bootstrap.Modal(document.getElementById('applicationModal'));
+    const applicationForm = document.getElementById('applicationForm');
+    const jobTitleElement = document.getElementById('jobTitle');
+    const positionInput = document.getElementById('position');
+    const submitBtn = document.getElementById('submitBtn');
+    const formMessages = document.getElementById('formMessages');
+    
+    // Handle Apply Now button clicks
+    document.querySelectorAll('.apply-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const position = this.getAttribute('data-position');
+            jobTitleElement.textContent = position;
+            positionInput.value = position;
+            applicationModal.show();
+        });
+    });
+    
+    // Handle form submission
+    applicationForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.querySelector('.spinner-border').classList.remove('d-none');
+        
+        // Clear previous messages
+        formMessages.innerHTML = '';
+        formMessages.classList.add('d-none');
+        
+        // Create FormData object
+        const formData = new FormData(this);
+        
+        // Send AJAX request
+        fetch(this.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                formMessages.innerHTML = `
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle me-2"></i>
+                        ${data.message}
+                    </div>
+                `;
+                formMessages.classList.remove('d-none');
+                
+                // Reset form
+                applicationForm.reset();
+                
+                // Close modal after 3 seconds
+                setTimeout(() => {
+                    applicationModal.hide();
+                    formMessages.classList.add('d-none');
+                }, 3000);
+            } else {
+                // Show error message
+                formMessages.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        ${data.message}
+                    </div>
+                `;
+                formMessages.classList.remove('d-none');
+            }
+        })
+        .catch(error => {
+            // Show error message
+            formMessages.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    An error occurred. Please try again.
+                </div>
+            `;
+            formMessages.classList.remove('d-none');
+        })
+        .finally(() => {
+            // Reset button state
+            submitBtn.disabled = false;
+            submitBtn.querySelector('.spinner-border').classList.add('d-none');
+        });
+    });
+    
+    // File size validation
+    const resumeInput = document.getElementById('resume');
+    const portfolioInput = document.getElementById('portfolio');
+    
+    resumeInput.addEventListener('change', function() {
+        validateFileSize(this, 5); // 5MB max
+    });
+    
+    if (portfolioInput) {
+        portfolioInput.addEventListener('change', function() {
+            validateFileSize(this, 10); // 10MB max
+        });
+    }
+    
+    function validateFileSize(input, maxSizeMB) {
+        const file = input.files[0];
+        if (file && file.size > maxSizeMB * 1024 * 1024) {
+            alert(`File size must be less than ${maxSizeMB}MB`);
+            input.value = '';
+        }
+    }
+});
+</script>
+{% endblock %}

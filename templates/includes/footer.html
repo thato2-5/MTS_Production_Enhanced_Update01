@@ -1,0 +1,70 @@
+<footer class="bg-dark text-white pt-5 pb-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                <h5 class="text-uppercase mb-4">Monyamane Tech Solutions</h5>
+                <p>Providing innovative IT solutions to help businesses grow and succeed in the digital age.</p>
+                <div class="mt-4">
+                    <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.linkedin.com/in/thato-monyamane-14094217b" class="text-white me-3"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://github.com/thato2-5" class="text-white me-3"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                <h5 class="text-uppercase mb-4">Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="{{ url_for('home') }}" class="text-white text-decoration-none">Home</a></li>
+                    <li class="mb-2"><a href="{{ url_for('about') }}" class="text-white text-decoration-none">About Us</a></li>
+                    <li class="mb-2"><a href="{{ url_for('all_services') }}" class="text-white text-decoration-none">Services</a></li>
+                    <li class="mb-2"><a href="{{ url_for('portfolio') }}" class="text-white text-decoration-none">Portfolio</a></li>
+                    <li class="mb-2"><a href="{{ url_for('blog') }}" class="text-white text-decoration-none">Blog</a></li>
+                    <li class="mb-2"><a href="{{ url_for('contact') }}" class="text-white text-decoration-none">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                <h5 class="text-uppercase mb-4">Services</h5>
+                <ul class="list-unstyled">
+                    {% if services %}
+                        {% for service in services %}
+                        <li class="mb-2"><a href="{{ url_for('service_detail', service_id=service.id) }}" class="text-white text-decoration-none">{{ service.title }}</a></li>
+                        {% endfor %}
+                    {% else %}
+                        <li class="mb-2"><a href="{{ url_for('all_services') }}" class="text-white text-decoration-none">View All Services</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                <h5 class="text-uppercase mb-4">Contact Us</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> 5142 Roets Drive, Vosloorus Ext 02, Boksburg 1474</li>
+                    <li class="mb-2"><i class="fas fa-phone me-2"></i> +27 (0) 63 429 1035</li>
+                    <li class="mb-2"><i class="fas fa-envelope me-2"></i> info@monyatech.org.za</li>
+                </ul>
+                
+                <h6 class="text-uppercase mt-4 mb-3">Newsletter</h6>
+                <form class="mb-3">
+                    <div class="input-group">
+                        <input type="email" class="form-control" placeholder="Your Email" aria-label="Your Email">
+                        <button class="btn btn-primary" type="button">Subscribe</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <hr class="my-4">
+        
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center text-md-start">
+                <p class="mb-0">&copy; 2025 Monyamane Tech Solutions. All rights reserved.</p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <a href="#" class="text-white text-decoration-none me-3">Privacy Policy</a>
+                <a href="#" class="text-white text-decoration-none">Terms of Service</a>
+            </div>
+        </div>
+    </div>
+</footer>

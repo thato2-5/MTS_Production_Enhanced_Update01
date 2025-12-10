@@ -1,0 +1,373 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('blog') }}">Blog</a></li>
+            <li class="breadcrumb-item active">{{ post.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <article class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4 p-md-5">
+                    <!-- Post Header -->
+                    <header class="mb-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-primary me-2">{{ post.category }}</span>
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>{{ post.read_time }}
+                            </small>
+                        </div>
+                        
+                        <h1 class="h2 fw-bold mb-3">{{ post.title }}</h1>
+                        
+                        <div class="d-flex align-items-center">
+                            <img src="{{ url_for('static', filename='images/team/thato.jpg') }}" 
+                                 alt="{{ post.author }}" class="rounded-circle me-3" width="50" height="50"
+                                 onerror="this.src='{{ url_for('placeholder_image', filename='user-placeholder.jpg') }}'">
+                            <div>
+                                <h6 class="mb-1">{{ post.author }}</h6>
+                                <small class="text-muted">{{ post.date }}</small>
+                            </div>
+                        </div>
+                    </header>
+
+                    <!-- Featured Image -->
+                    <div class="mb-4">
+                        <img src="{{ url_for('static', filename='images/blog/post-' + post.id|string + '.jpg') }}" 
+                             alt="{{ post.title }}" class="img-fluid rounded w-100"
+                             onerror="this.src='{{ url_for('placeholder_image', filename='blog-placeholder.jpg') }}'">
+                    </div>
+
+                    <!-- Post Content -->
+                    <div class="post-content">
+                        <p class="lead mb-4">{{ post.excerpt }}</p>
+                        
+                        <div class="content-section mb-4">
+                            {% if post.content is string %}
+                                {{ post.content|safe }}
+                            {% else %}
+                                <p>{{ post.content }}</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Dynamic Key Takeaways based on category -->
+                        <div class="key-takeaways mt-5">
+                            <h3 class="h4 mb-3">Key Takeaways</h3>
+                            <ul class="list-unstyled">
+                                {% if post.category == 'Cybersecurity' %}
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Implement proper authorization and authentication</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Regular security assessments and penetration testing</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Stay updated with latest security threats and patches</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Follow ethical hacking principles and responsible disclosure</li>
+                                {% elif post.category == 'Mobile Development' %}
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Choose framework based on project requirements and team skills</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Consider performance, development speed, and maintenance</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Implement proper testing and CI/CD pipelines</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Optimize for user experience and platform guidelines</li>
+                                {% elif post.category == 'AI & Machine Learning' %}
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Leverage AI for automation and enhanced user experiences</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Consider data privacy and ethical implications</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Choose the right cloud AI services for your needs</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Implement proper model training and validation</li>
+                                {% elif post.category == 'Cloud Computing' %}
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Optimize cloud resources for cost and performance</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Implement proper security and compliance measures</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Use multi-cloud strategies for resilience</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Monitor and optimize cloud spending regularly</li>
+                                {% elif post.category == 'Database Solutions' %}
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Implement proper indexing and query optimization</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Choose the right database hosting strategy</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Ensure data security and regular backups</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Monitor performance and plan for scalability</li>
+                                {% elif post.category == 'IoT Solutions' %}
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Implement proper security for connected devices</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Consider connectivity and power constraints</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Plan for data processing and storage</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Ensure interoperability and standards compliance</li>
+                                {% elif post.category == 'Software Development' %}
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Follow best practices and coding standards</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Implement proper testing and documentation</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Use version control and CI/CD pipelines</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Focus on scalability and maintainability</li>
+                                {% else %}
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Stay updated with emerging technologies</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Implement best practices in your projects</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Focus on security and scalability</li>
+                                    <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Continuous learning and adaptation</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+
+                        <!-- Dynamic Pro Tip based on category -->
+                        <div class="alert alert-info mt-4">
+                            <h5 class="alert-heading"><i class="fas fa-lightbulb me-2"></i>Pro Tip</h5>
+                            <p class="mb-0">
+                                {% if post.category == 'Cybersecurity' %}
+                                    Always conduct security testing in authorized environments only and follow responsible disclosure practices.
+                                {% elif post.category == 'Mobile Development' %}
+                                    Test your app on real devices and consider user feedback throughout the development process.
+                                {% elif post.category == 'AI & Machine Learning' %}
+                                    Start with clear business objectives and ensure you have quality data before implementing AI solutions.
+                                {% elif post.category == 'Cloud Computing' %}
+                                    Monitor your cloud costs regularly and implement cost optimization strategies from day one.
+                                {% elif post.category == 'Database Solutions' %}
+                                    Regular database maintenance and performance monitoring are crucial for application reliability.
+                                {% else %}
+                                    Always consider the long-term implications of your technology choices and ensure they align with your business goals.
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Post Footer -->
+                    <footer class="mt-5 pt-4 border-top">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <span class="text-muted me-3">Share this post:</span>
+                                <div class="d-flex gap-2">
+                                    <a href="https://twitter.com/intent/tweet?text={{ post.title|urlencode }}&url={{ request.url|urlencode }}" 
+                                       class="text-primary" target="_blank">
+                                        <i class="fab fa-twitter"></i>
+                                    </a>
+                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.url|urlencode }}" 
+                                       class="text-primary" target="_blank">
+                                        <i class="fab fa-linkedin"></i>
+                                    </a>
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url|urlencode }}" 
+                                       class="text-primary" target="_blank">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                    <a href="#" class="text-primary" onclick="copyToClipboard('{{ request.url }}')">
+                                        <i class="fas fa-link"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div>
+                                <a href="{{ url_for('blog') }}" class="btn btn-outline-primary">
+                                    <i class="fas fa-arrow-left me-2"></i>Back to Blog
+                                </a>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            </article>
+
+            <!-- Author Bio -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-start">
+                        <img src="{{ url_for('static', filename='images/team/thato.jpg') }}" 
+                             alt="{{ post.author }}" class="rounded-circle me-4" width="80" height="80"
+                             onerror="this.src='{{ url_for('placeholder_image', filename='user-placeholder.jpg') }}'">
+                        <div>
+                            <h5 class="mb-2">About {{ post.author }}</h5>
+                            <p class="text-muted mb-3">
+                                {{ post.author }} is the Managing Director at Monyamane Tech Solutions with 3+ years of experience 
+                                in enterprise technology solutions and digital transformation. Passionate about helping businesses 
+                                leverage technology for growth and efficiency.
+                            </p>
+                            <div class="d-flex gap-3">
+                                <a href="https://www.linkedin.com/in/thato-monyamane-14094217b" class="text-primary" target="_blank">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                                <a href="https://github.com/thato2-5" class="text-primary" target="_blank">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Related Posts -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Related Posts</h5>
+                </div>
+                <div class="card-body">
+                    {% if related_posts %}
+                        {% for related_post in related_posts %}
+                        <div class="mb-3 pb-3 {% if not loop.last %}border-bottom{% endif %}">
+                            <h6 class="mb-1">
+                                <a href="{{ url_for('blog_post', post_id=related_post.id) }}" 
+                                   class="text-decoration-none text-dark">
+                                    {{ related_post.title }}
+                                </a>
+                            </h6>
+                            <small class="text-muted">{{ related_post.date }}</small>
+                            <div>
+                                <span class="badge bg-secondary badge-sm">{{ related_post.category }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted mb-0">No related posts found.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Categories -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Categories</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        {% set categories = [
+                            ('Technology Trends', 1),
+                            ('Cloud Computing', 3),
+                            ('Cybersecurity', 6),
+                            ('AI & Machine Learning', 3),
+                            ('Mobile Development', 4),
+                            ('Database Solutions', 2),
+                            ('IoT Solutions', 2),
+                            ('Software Development', 2)
+                        ] %}
+                        
+                        {% for category, count in categories %}
+                        <a href="{{ url_for('blog') }}?category={{ category|urlencode }}" 
+                           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center 
+                                  {% if post.category == category %}active{% endif %}">
+                            {{ category }}
+                            <span class="badge {% if post.category == category %}bg-light text-dark{% else %}bg-primary{% endif %} rounded-pill">
+                                {{ count }}
+                            </span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Newsletter -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Subscribe to Newsletter</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small mb-3">Get the latest tech insights and updates delivered to your inbox.</p>
+                    <form action="{{ url_for('contact') }}" method="POST">
+                        <div class="mb-3">
+                            <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+                            <input type="hidden" name="newsletter" value="true">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function copyToClipboard(text) {
+    // Create a temporary event if not provided
+    const event = window.event || {};
+    
+    navigator.clipboard.writeText(text).then(function() {
+        // Show success message
+        if (event.target) {
+            const originalIcon = event.target.innerHTML;
+            event.target.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => {
+                event.target.innerHTML = originalIcon;
+            }, 2000);
+        }
+    }).catch(function(err) {
+        console.error('Could not copy text: ', err);
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            const successful = document.execCommand('copy');
+            if (successful && event.target) {
+                const originalIcon = event.target.innerHTML;
+                event.target.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => {
+                    event.target.innerHTML = originalIcon;
+                }, 2000);
+            }
+        } catch (err) {
+            console.error('Fallback copy failed: ', err);
+            alert('Failed to copy link to clipboard');
+        }
+        document.body.removeChild(textArea);
+    });
+    
+    // Prevent default and stop propagation
+    if (event.preventDefault) event.preventDefault();
+    if (event.stopPropagation) event.stopPropagation();
+    return false;
+}
+
+// Add syntax highlighting for code blocks
+document.addEventListener('DOMContentLoaded', function() {
+    const codeBlocks = document.querySelectorAll('pre code');
+    codeBlocks.forEach(function(block) {
+        block.classList.add('language-python', 'line-numbers');
+    });
+});
+</script>
+
+<style>
+.post-content pre {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+.post-content code {
+    background-color: #f8f9fa;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+.post-content table {
+    width: 100%;
+    margin: 1rem 0;
+    border-collapse: collapse;
+}
+
+.post-content table th,
+.post-content table td {
+    padding: 0.75rem;
+    border: 1px solid #dee2e6;
+}
+
+.post-content table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.badge-sm {
+    font-size: 0.7em;
+    padding: 0.25em 0.5em;
+}
+
+.list-group-item.active {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+/* Copy link animation */
+.fa-check {
+    color: #28a745;
+}
+</style>
+{% endblock %}

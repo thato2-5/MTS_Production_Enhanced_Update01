@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3">
+            <!-- Sidebar -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Client Dashboard</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="icon-md bg-light-primary rounded-circle me-3">
+                            <i class="fas fa-user text-primary"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-0">{{ username }}</h6>
+                            <small class="text-muted">Client</small>
+                        </div>
+                    </div>
+                    
+                    <nav class="nav flex-column">
+                        <a class="nav-link active" href="#">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-project-diagram me-2"></i>Projects
+                        </a>
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-ticket-alt me-2"></i>Support Tickets
+                        </a>
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-file-invoice me-2"></i>Invoices
+                        </a>
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-cog me-2"></i>Settings
+                        </a>
+                        <a class="nav-link text-danger" href="{{ url_for('logout') }}">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-9">
+            <!-- Main Content -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">Welcome back, {{ username }}!</h1>
+                <span class="badge bg-success">Active</span>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-md bg-light-primary rounded-circle me-3">
+                                    <i class="fas fa-project-diagram text-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="mb-0">3</h4>
+                                    <small class="text-muted">Active Projects</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-md bg-light-warning rounded-circle me-3">
+                                    <i class="fas fa-ticket-alt text-warning"></i>
+                                </div>
+                                <div>
+                                    <h4 class="mb-0">2</h4>
+                                    <small class="text-muted">Open Tickets</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-md bg-light-success rounded-circle me-3">
+                                    <i class="fas fa-check-circle text-success"></i>
+                                </div>
+                                <div>
+                                    <h4 class="mb-0">5</h4>
+                                    <small class="text-muted">Completed</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Projects -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Recent Projects</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Project Name</th>
+                                    <th>Status</th>
+                                    <th>Last Update</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>E-commerce Platform</td>
+                                    <td><span class="badge bg-success">Completed</span></td>
+                                    <td>2024-01-15</td>
+                                    <td><a href="#" class="btn btn-sm btn-outline-primary">View</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Mobile App Development</td>
+                                    <td><span class="badge bg-warning">In Progress</span></td>
+                                    <td>2024-02-20</td>
+                                    <td><a href="#" class="btn btn-sm btn-outline-primary">View</a></td>
+                                </tr>
+                                <tr>
+                                    <td>CRM System</td>
+                                    <td><span class="badge bg-primary">Planning</span></td>
+                                    <td>2024-02-18</td>
+                                    <td><a href="#" class="btn btn-sm btn-outline-primary">View</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
